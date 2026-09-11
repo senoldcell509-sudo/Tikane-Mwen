@@ -1,40 +1,1642 @@
--- TAB KLIYAN
-create table if not exists clients (
-  id text primary key,
-  name text not null,
-  phone text not null,
-  nif text,
-  plan text not null,
-  amount numeric not null,
-  days integer not null,
-  created_at timestamptz default now()
+<!doctype html>
+<html lang="ht">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14213d">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+
+<title>Tikanè Mwen</title>
+
+<style>
+:root{
+  --ink:#14213d;
+  --ink2:#20355d;
+  --gold:#d6a84b;
+  --gold2:#f3c969;
+  --green:#24704d;
+  --red:#b6463a;
+  --bg:#f5f2ea;
+  --paper:#ffffff;
+  --line:#e5dccb;
+  --muted:#776f63
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#eef2f7 0,#f7f3ea 38%,#f5f2ea 100%);
+  color:#20242c
+}
+.app{
+  max-width:560px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:88px
+}
+header{
+  background:linear-gradient(135deg,var(--ink),var(--ink2));
+  color:white;
+  padding:22px 18px 20px;
+  border-radius:0 0 24px 24px
+}
+h1{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:25px
+}
+.stats{
+  display:flex;
+  gap:9px;
+  margin-top:16px
+}
+.stat{
+  flex:1;
+  background:#ffffff14;
+  border:1px solid #ffffff22;
+  padding:11px 9px;
+  border-radius:12px;
+  font-size:11px;
+  text-align:center
+}
+.stat b{
+  font-size:16px;
+  display:block;
+  color:white;
+  margin-bottom:3px
+}
+main{padding:18px}
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:12px 14px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:14px
+}
+.primary{
+  background:linear-gradient(135deg,var(--ink),var(--ink2));
+  color:#fff
+}
+.green{
+  background:linear-gradient(135deg,#2b865d,var(--green));
+  color:#fff
+}
+.red{
+  background:linear-gradient(135deg,#cc5b4d,var(--red));
+  color:#fff
+}
+.gold{
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#382600
+}
+.outline{
+  background:#fff;
+  border:1px solid #ccd4df;
+  color:var(--ink)
+}
+.full{width:100%}
+.row{
+  display:flex;
+  gap:9px
+}
+.row .btn{flex:1}
+
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:15px;
+  margin:12px 0;
+  box-shadow:0 4px 14px #0000000a
+}
+.client{
+  cursor:pointer;
+  position:relative;
+  overflow:hidden
+}
+.client:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:4px;
+  background:var(--gold)
+}
+.client b{
+  font-size:16px;
+  color:var(--ink)
+}
+.muted{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5
+}
+.badge{
+  float:right;
+  padding:4px 9px;
+  border-radius:99px;
+  background:#e8f3eb;
+  color:var(--green);
+  font-size:10px;
+  font-weight:800
+}
+input,select{
+  width:100%;
+  padding:12px;
+  margin:5px 0 13px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  font-size:16px;
+  background:#fff
+}
+label{
+  font-size:12px;
+  font-weight:800;
+  color:var(--ink)
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#14213d99;
+  display:flex;
+  align-items:flex-end;
+  z-index:20
+}
+.sheet{
+  background:#fff;
+  width:100%;
+  max-width:560px;
+  margin:auto;
+  padding:22px 18px 24px;
+  border-radius:24px 24px 0 0;
+  max-height:90vh;
+  overflow:auto
+}
+.boxgrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px
+}
+.box{
+  padding:13px;
+  border:1px solid #e5c77f;
+  background:#fff8e8;
+  border-radius:14px;
+  text-align:left;
+  cursor:pointer
+}
+.box.paid{
+  opacity:.65;
+  border-color:#8fc2a4;
+  background:#f0f8f2
+}
+.box b{display:block;color:var(--ink)}
+.box span{
+  display:block;
+  color:var(--green);
+  font-weight:800;
+  margin:5px 0
+}
+.box small{
+  display:block;
+  color:var(--muted)
+}
+.history{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:11px 2px;
+  border-bottom:1px solid #eee8dc
+}
+.history:last-child{border-bottom:0}
+.history b{color:var(--green)}
+
+nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:560px;
+  background:#fffffff2;
+  display:flex;
+  border-top:1px solid var(--line)
+}
+nav button{
+  flex:1;
+  padding:14px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-weight:800
+}
+.toast{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--ink);
+  color:white;
+  padding:11px 17px;
+  border-radius:99px;
+  z-index:50;
+  font-size:13px;
+  font-weight:700
+}
+h2,h3{
+  color:var(--ink);
+  font-family:Georgia,serif
+}
+.metric-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px
+}
+.metric{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:13px
+}
+.metric b{
+  display:block;
+  color:var(--ink);
+  font-size:20px;
+  margin-top:5px
+}
+.metric small{color:var(--muted)}
+.metric.wide{grid-column:span 2}
+.metric.wide b{color:var(--green)}
+
+.dash-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px
+}
+.eyebrow{
+  font-size:10px;
+  letter-spacing:1.5px;
+  font-weight:900;
+  color:var(--gold)
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<h1 id="biz">Tikanè Mwen</h1>
+<div class="stats" id="stats"></div>
+</header>
+
+<main id="main"></main>
+
+<nav>
+<button id="navClients">👥 Kliyan</button>
+<button id="navSettings">⚙️ Paramèt</button>
+</nav>
+
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+
+const KEY='tikane_v9_data';
+
+let S=JSON.parse(
+  localStorage.getItem(KEY) ||
+  '{"clients":[],"biz":"Tikanè Mwen"}'
 );
 
--- TAB DEPO
-create table if not exists deposits (
-  id text primary key,
-  client_id text not null references clients(id) on delete cascade,
-  day integer,
-  box integer,
-  amount numeric not null,
-  deposit_date timestamptz default now()
+if(!S.clients) S.clients=[];
+
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(S));
+}
+
+const $=id=>document.getElementById(id);
+
+const money=n=>
+'$HT '+Number(n||0).toLocaleString(
+'fr-HT',
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
 );
 
--- Aktive RLS
-alter table clients enable row level security;
-alter table deposits enable row level security;
+const uid=()=>
+Date.now().toString(36)+
+Math.random().toString(36).slice(2,7);
 
--- POLICY POU APLIKASYON AN KA LI AK EKRI
-create policy "Allow public access clients"
-on clients
-for all
-to anon
-using (true)
-with check (true);
+function toast(x){
+let d=document.createElement('div');
+d.className='toast';
+d.textContent=x;
+document.body.appendChild(d);
 
-create policy "Allow public access deposits"
-on deposits
-for all
-to anon
-using (true)
-with check (true);
+setTimeout(()=>d.remove(),2200);
+}
+
+function expected(c){
+return c.plan==='normal'
+?c.amount*c.days
+:c.amount*c.days*(c.days+1)/2;
+}
+
+function paid(c){
+return c.deposits.reduce(
+(a,x)=>a+x.amount,0
+);
+}
+
+function complete(c){
+return c.deposits.length>=c.days;
+}
+
+function updateStats(){
+
+let active=S.clients.filter(
+c=>!complete(c)
+).length;
+
+$('biz').textContent=S.biz;
+
+$('stats').innerHTML=`
+
+<div class="stat">
+<b>${S.clients.length}</b>
+Kliyan
+</div>
+
+<div class="stat">
+<b>${active}</b>
+Aktif
+</div>
+
+<div class="stat">
+<b>${money(
+S.clients.reduce(
+(a,c)=>a+paid(c),0
+)
+)}</b>
+Total depo
+</div>
+
+`;
+
+}
+
+function clients(){
+
+updateStats();
+
+let totalDeposits=
+S.clients.reduce(
+(a,c)=>a+paid(c),0
+);
+
+let totalExpected=
+S.clients.reduce(
+(a,c)=>a+expected(c),0
+);
+
+let completed=
+S.clients.filter(
+c=>complete(c)
+).length;
+
+let progress=
+totalExpected
+?Math.round(
+totalDeposits/
+totalExpected*100
+)
+:0;
+
+$('main').innerHTML=`
+
+<div class="dash-head">
+
+<div>
+
+<div class="eyebrow">
+DASHBOARD
+</div>
+
+<h2>Bon retou 👋</h2>
+
+<div class="muted">
+Men rezime aktivite tikanè yo.
+</div>
+
+</div>
+
+<button
+class="btn gold"
+id="newClient">
+
+＋ Kliyan
+
+</button>
+
+</div>
+
+
+<div class="metric-grid">
+
+<div class="metric">
+<small>Total kliyan</small>
+<b>${S.clients.length}</b>
+</div>
+
+<div class="metric">
+<small>Kliyan aktif</small>
+<b>${S.clients.filter(
+c=>!complete(c)
+).length}</b>
+</div>
+
+<div class="metric">
+<small>Plan fini</small>
+<b>${completed}</b>
+</div>
+
+<div class="metric wide">
+<small>Total depo kolekte</small>
+<b>${money(totalDeposits)}</b>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="history">
+
+<b>Pwogrè global</b>
+
+<b>${progress}%</b>
+
+</div>
+
+<div class="muted">
+
+${money(totalDeposits)}
+kolekte sou
+
+${money(totalExpected)}
+
+atann.
+
+</div>
+
+</div>
+
+
+<h3>👥 Kliyan yo</h3>
+
+<input
+id="search"
+placeholder="🔎 Chèche kliyan pa non oswa telefòn...">
+
+<div id="list"></div>
+
+`;
+
+$('newClient').onclick=newClient;
+
+$('search').oninput=renderList;
+
+renderList();
+
+}
+
+
+function renderList(){
+
+let q=$('search').value.toLowerCase();
+
+let list=$('list');
+
+list.innerHTML='';
+
+S.clients
+
+.filter(c=>
+
+c.name.toLowerCase().includes(q)
+
+||
+
+c.phone.includes(q)
+
+)
+
+.forEach(c=>{
+
+let d=document.createElement('div');
+
+d.className='card client';
+
+d.innerHTML=`
+
+<span class="badge">
+
+${complete(c)?'Fini':'Aktif'}
+
+</span>
+
+<b>${c.name}</b>
+
+<div class="muted">
+
+${c.plan==='normal'
+?'Plan Nòmal'
+:'Plan Ekspo'}
+
+• ${c.deposits.length}/${c.days}
+
+</div>
+
+<div class="muted">
+
+${money(paid(c))}
+
+sou
+
+${money(expected(c))}
+
+</div>
+
+`;
+
+d.onclick=()=>detail(c.id);
+
+list.appendChild(d);
+
+});
+
+if(!list.innerHTML){
+
+list.innerHTML=
+
+'<div class="card muted">Pa gen kliyan.</div>';
+
+}
+
+}
+
+
+function modal(content){
+
+$('modalRoot').innerHTML=
+
+`<div class="modal">
+
+<div class="sheet">
+
+${content}
+
+</div>
+
+</div>`;
+
+}
+
+function closeModal(){
+
+$('modalRoot').innerHTML='';
+
+}
+
+
+function newClient(){
+
+modal(`
+
+<h2>Nouvo kliyan</h2>
+
+<label>Non kliyan</label>
+
+<input id="n">
+
+
+<label>Telefòn</label>
+
+<input id="p">
+
+
+<label>Plan</label>
+
+<select id="pl">
+
+<option value="normal">
+Plan Nòmal
+</option>
+
+<option value="expo">
+Plan Ekspo (kazye)
+</option>
+
+</select>
+
+
+<label id="amtLabel">
+
+Montan chak jou ($HT)
+
+</label>
+
+<input
+id="a"
+type="number"
+min="1">
+
+
+<label>
+
+Konbyen jou/kazye?
+
+</label>
+
+<input
+id="d"
+type="number"
+min="1"
+value="110">
+
+
+<div class="row">
+
+<button
+class="btn outline"
+id="cancel">
+
+Anile
+
+</button>
+
+
+<button
+class="btn primary"
+id="create">
+
+Kreye
+
+</button>
+
+</div>
+
+`);
+
+
+$('cancel').onclick=closeModal;
+
+
+$('pl').onchange=()=>{
+
+$('amtLabel').textContent=
+
+$('pl').value==='normal'
+
+?'Montan chak jou ($HT)'
+
+:'Plan pou miltipliye ($HT)';
+
+};
+
+
+$('create').onclick=()=>{
+
+let name=$('n').value.trim();
+
+let phone=$('p').value.trim();
+
+let amount=Number(
+$('a').value
+);
+
+let days=Number(
+$('d').value
+);
+
+if(
+!name||
+!phone||
+amount<=0||
+days<=0
+)
+
+return toast(
+'Ranpli tout chan yo.'
+);
+
+
+S.clients.push({
+
+id:uid(),
+
+name,
+
+phone,
+
+plan:$('pl').value,
+
+amount,
+
+days,
+
+created:new Date().toISOString(),
+
+deposits:[]
+
+});
+
+
+save();
+
+closeModal();
+
+clients();
+
+toast(
+'Kliyan an kreye!'
+);
+
+};
+
+}
+
+
+function detail(id){
+
+let c=S.clients.find(
+x=>x.id===id
+);
+
+if(!c) return clients();
+
+
+let action=
+
+c.plan==='normal'
+
+?`
+
+<button
+class="btn green full"
+id="collectNormal">
+
+➕ Ankese / Depo
+
+</button>
+
+`
+
+:'';
+
+
+let boxes='';
+
+
+if(c.plan==='expo'){
+
+for(
+let k=1;
+k<=c.days;
+k++
+){
+
+let x=c.deposits.find(
+d=>d.box===k
+);
+
+boxes+=`
+
+<button
+
+class="box ${x?'paid':''}"
+
+data-box="${k}"
+
+${x?'disabled':''}
+
+>
+
+<b>Kazye ${k}</b>
+
+<span>
+
+${money(k*c.amount)}
+
+</span>
+
+<small>
+
+${x?'Peye ✓':'Ankese'}
+
+</small>
+
+</button>
+
+`;
+
+}
+
+}
+
+
+$('main').innerHTML=`
+
+<button
+class="btn outline"
+id="back">
+
+← Retounen
+
+</button>
+
+
+<h2>${c.name}</h2>
+
+
+<div class="card">
+
+
+<div class="history">
+
+<span>Telefòn</span>
+
+<b>${c.phone}</b>
+
+</div>
+
+
+<div class="history">
+
+<span>Plan</span>
+
+<b>
+
+${c.plan==='normal'
+?'Nòmal'
+:'Ekspo pa kazye'}
+
+</b>
+
+</div>
+
+
+<div class="history">
+
+<span>Pwogrè</span>
+
+<b>
+
+${c.deposits.length}/${c.days}
+
+</b>
+
+</div>
+
+
+<div class="history">
+
+<span>Total depo</span>
+
+<b>
+
+${money(paid(c))}
+
+</b>
+
+</div>
+
+
+<div class="history">
+
+<span>Total plan</span>
+
+<b>
+
+${money(expected(c))}
+
+</b>
+
+</div>
+
+
+</div>
+
+
+${action}
+
+
+${c.plan==='expo'
+
+?`
+
+<h3>
+📦 Chwazi kazye
+</h3>
+
+<div class="boxgrid">
+
+${boxes}
+
+</div>
+
+`
+
+:''}
+
+
+<h3>Istwa</h3>
+
+
+<div class="card">
+
+${
+
+c.deposits
+
+.slice()
+
+.reverse()
+
+.map(d=>`
+
+<div class="history">
+
+<span>
+
+${
+c.plan==='expo'
+
+?'Kazye '+d.box
+
+:'Jou '+d.day
+}
+
+<br>
+
+<small>
+
+${new Date(
+d.date
+).toLocaleDateString('fr-HT')}
+
+</small>
+
+</span>
+
+
+<b>
+
+${money(d.amount)}
+
+</b>
+
+</div>
+
+`).join('')
+
+||
+
+'Pa gen depo.'
+
+}
+
+</div>
+
+`;
+
+
+$('back').onclick=clients;
+
+
+if(c.plan==='normal'){
+
+$('collectNormal').onclick=()=>
+collectNormal(c);
+
+}
+
+
+if(c.plan==='expo'){
+
+document
+.querySelectorAll(
+'[data-box]'
+)
+
+.forEach(b=>
+
+b.onclick=()=>
+
+collectBox(
+c,
+Number(
+b.dataset.box
+)
+)
+
+);
+
+}
+
+}
+
+
+function collectNormal(c){
+
+let day=
+c.deposits.length+1;
+
+if(day>c.days)
+
+return toast(
+'Plan an fini.'
+);
+
+
+modal(`
+
+<h2>
+➕ Ankese Plan Nòmal
+</h2>
+
+
+<div class="card">
+
+Jou
+
+<b>
+
+${day}/${c.days}
+
+</b>
+
+<br>
+
+Montan:
+
+<b>
+
+${money(c.amount)}
+
+</b>
+
+</div>
+
+
+<label>
+
+Montan resevwa ($HT)
+
+</label>
+
+
+<input
+
+id="collectAmount"
+
+type="number"
+
+value="${c.amount}"
+
+>
+
+
+<div class="row">
+
+<button
+class="btn outline"
+id="cn">
+
+Anile
+
+</button>
+
+
+<button
+class="btn green"
+id="cc">
+
+✓ Konfime
+
+</button>
+
+</div>
+
+`);
+
+
+$('cn').onclick=closeModal;
+
+
+$('cc').onclick=()=>{
+
+
+let amount=Number(
+$('collectAmount').value
+);
+
+
+if(amount<=0)
+
+return toast(
+'Montan pa valab.'
+);
+
+
+let ratio=
+amount/c.amount;
+
+
+let whole=
+Math.round(ratio);
+
+
+if(
+Math.abs(
+ratio-whole
+)>0.000001
+||
+
+whole<1
+)
+
+return toast(
+'Montan an dwe egal ak youn oswa plizyè jou antye.'
+);
+
+
+let remaining=
+c.days-
+c.deposits.length;
+
+
+if(whole>remaining)
+
+return toast(
+'Gen sèlman '
++
+remaining
++
+' jou ki rete.'
+);
+
+
+let now=
+new Date().toISOString();
+
+
+for(
+let i=0;
+i<whole;
+i++
+){
+
+c.deposits.push({
+
+id:uid(),
+
+day:
+c.deposits.length+1,
+
+amount:c.amount,
+
+date:now
+
+});
+
+}
+
+
+save();
+
+closeModal();
+
+detail(c.id);
+
+
+toast(
+'Ankesman an anrejistre!'
+);
+
+
+};
+
+}
+
+
+function collectBox(c,box){
+
+let amount=
+box*c.amount;
+
+
+modal(`
+
+<h2>
+
+📦 Ankese Kazye ${box}
+
+</h2>
+
+
+<div class="card">
+
+Kazye:
+
+<b>
+
+${box}
+
+</b>
+
+<br><br>
+
+Montan:
+
+<h2>
+
+${money(amount)}
+
+</h2>
+
+</div>
+
+
+<div class="row">
+
+<button
+class="btn outline"
+id="cbn">
+
+Anile
+
+</button>
+
+
+<button
+class="btn green"
+id="cbc">
+
+✓ Ankese
+
+</button>
+
+</div>
+
+`);
+
+
+$('cbn').onclick=
+closeModal;
+
+
+$('cbc').onclick=()=>{
+
+
+if(
+c.deposits.some(
+d=>d.box===box
+)
+){
+
+closeModal();
+
+return toast(
+'Kazye sa deja peye.'
+);
+
+}
+
+
+c.deposits.push({
+
+id:uid(),
+
+box,
+
+amount,
+
+date:
+new Date().toISOString()
+
+});
+
+
+save();
+
+closeModal();
+
+detail(c.id);
+
+
+toast(
+'Kazye an anrejistre!'
+);
+
+
+};
+
+}
+
+
+function settings(){
+
+let active=
+S.clients.filter(
+c=>!complete(c)
+).length;
+
+
+$('main').innerHTML=`
+
+<h2>
+⚙️ Paramèt
+</h2>
+
+
+<div class="card">
+
+<label>
+
+Non biznis /
+aplikasyon
+
+</label>
+
+
+<input
+id="bizInput"
+value="${S.biz}">
+
+
+<button
+class="btn primary full"
+id="saveBiz">
+
+💾 Anrejistre
+
+</button>
+
+</div>
+
+
+<h3>
+📊 Rezime Done
+</h3>
+
+
+<div class="card">
+
+
+<div class="history">
+
+<span>Total kliyan</span>
+
+<b>
+
+${S.clients.length}
+
+</b>
+
+</div>
+
+
+<div class="history">
+
+<span>Kliyan aktif</span>
+
+<b>
+
+${active}
+
+</b>
+
+</div>
+
+
+<div class="history">
+
+<span>Total depo</span>
+
+<b>
+
+${money(
+
+S.clients.reduce(
+(a,c)=>a+paid(c),
+0
+)
+
+)}
+
+</b>
+
+</div>
+
+
+</div>
+
+
+<h3>
+🛡️ Jesyon Done
+</h3>
+
+
+<div class="card">
+
+<div class="muted">
+
+Sove yon kopi
+done aplikasyon an.
+
+</div>
+
+
+<div class="row">
+
+<button
+class="btn outline"
+id="exportData">
+
+📤 Ekspòte
+
+</button>
+
+
+<button
+class="btn red"
+id="resetData">
+
+🗑️ Reyajiste
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+
+$('saveBiz').onclick=()=>{
+
+S.biz=
+
+$('bizInput').value.trim()
+
+||
+
+'Tikanè Mwen';
+
+
+save();
+
+updateStats();
+
+toast(
+'Paramèt anrejistre!'
+);
+
+};
+
+
+$('exportData').onclick=()=>{
+
+const blob=new Blob(
+
+[
+JSON.stringify(
+S,
+null,
+2
+)
+],
+
+{
+type:
+'application/json'
+}
+
+);
+
+
+const u=
+URL.createObjectURL(
+blob
+);
+
+
+const a=
+document.createElement(
+'a'
+);
+
+
+a.href=u;
+
+a.download=
+'Tikane_Mwen_Sauvegarde.json';
+
+
+a.click();
+
+
+URL.revokeObjectURL(
+u
+);
+
+
+toast(
+'Done yo ekspòte!'
+);
+
+};
+
+
+$('resetData').onclick=()=>{
+
+if(
+
+confirm(
+
+'ATANSYON: Sa ap efase tout kliyan ak depo yo. Kontinye?'
+
+)
+
+){
+
+S={
+
+clients:[],
+
+biz:
+S.biz||
+'Tikanè Mwen'
+
+};
+
+
+save();
+
+clients();
+
+}
+
+};
+
+}
+
+
+$('navClients').onclick=
+clients;
+
+$('navSettings').onclick=
+settings;
+
+
+clients();
+
+</script>
+
+
+<script>
+
+if(
+'serviceWorker'
+in navigator
+){
+
+window.addEventListener(
+
+'load',
+
+()=>navigator
+.serviceWorker
+.register(
+'./sw.js'
+)
+
+);
+
+}
+
+</script>
+
+</body>
+</html>
