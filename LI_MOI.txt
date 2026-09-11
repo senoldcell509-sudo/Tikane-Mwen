@@ -1,0 +1,11 @@
+TIKANÈ MWEN — PWA
+===================
+
+Pou mete aplikasyon an sou ekran telefòn lan, li dwe sou yon sit HTTPS.
+1. Mete fichye sa yo sou yon hosting HTTPS.
+2. Louvri index.html nan Chrome sou Android.
+3. Peze meni ⋮
+4. Chwazi "Install app" oswa "Add to Home screen".
+5. Ikon Tikanè Mwen ap parèt sou ekran telefòn lan.
+
+ENPÒTAN: Ouvri index.html dirèkteman nan File Manager pa toujou pèmèt enstalasyon PWA.

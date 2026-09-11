@@ -1,0 +1,125 @@
+<!doctype html><html lang="ht"><head>
+<meta name="theme-color" content="#14213d">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tikanè Mwen</title><style>
+:root{--ink:#14213d;--ink2:#20355d;--gold:#d6a84b;--gold2:#f3c969;--green:#24704d;--red:#b6463a;--bg:#f5f2ea;--paper:#ffffff;--line:#e5dccb;--muted:#776f63}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#eef2f7 0,#f7f3ea 38%,#f5f2ea 100%);color:#20242c}
+.app{max-width:560px;margin:auto;min-height:100vh;padding-bottom:88px}
+header{background:linear-gradient(135deg,var(--ink),var(--ink2));color:white;padding:22px 18px 20px;border-radius:0 0 24px 24px;box-shadow:0 8px 24px #14213d33}
+h1{margin:0;font-family:Georgia,serif;font-size:25px;letter-spacing:.2px}.stats{display:flex;gap:9px;margin-top:16px}.stat{flex:1;background:#ffffff14;border:1px solid #ffffff22;padding:11px 9px;border-radius:12px;font-size:11px;color:#e7ebf2;text-align:center}.stat b{font-size:16px;display:block;color:white;margin-bottom:3px}
+main{padding:18px}.btn{border:0;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer;transition:.18s transform,.18s box-shadow;font-size:14px}.btn:active{transform:scale(.97)}.primary{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;box-shadow:0 4px 12px #14213d33}.green{background:linear-gradient(135deg,#2b865d,var(--green));color:#fff;box-shadow:0 4px 12px #24704d33}.red{background:linear-gradient(135deg,#cc5b4d,var(--red));color:#fff}.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#382600;box-shadow:0 5px 14px #d6a84b55}.outline{background:#fff;border:1px solid #ccd4df;color:var(--ink)}.full{width:100%}.row{display:flex;gap:9px}.row .btn{flex:1}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:15px;margin:12px 0;box-shadow:0 4px 14px #2a2a2a0a}.client{cursor:pointer;position:relative;overflow:hidden}.client:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}.client b{font-size:16px;color:var(--ink)}.muted{color:var(--muted);font-size:13px;line-height:1.5}.badge{float:right;padding:4px 9px;border-radius:99px;background:#e8f3eb;color:var(--green);font-size:10px;font-weight:800}
+input,select{width:100%;padding:12px;margin:5px 0 13px;border:1px solid var(--line);border-radius:11px;font-size:16px;background:#fff;color:#222;outline:none}input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d6a84b22}label{font-size:12px;font-weight:800;color:var(--ink)}
+.modal{position:fixed;inset:0;background:#14213d99;display:flex;align-items:flex-end;z-index:20;backdrop-filter:blur(3px)}.sheet{background:linear-gradient(180deg,#fff,#f9f6ef);width:100%;max-width:560px;margin:auto;padding:22px 18px 24px;border-radius:24px 24px 0 0;max-height:90vh;overflow:auto;box-shadow:0 -8px 30px #0003}.sheet h2{font-family:Georgia,serif;color:var(--ink);margin:0 0 16px}
+.boxgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.box{padding:13px;border:1px solid #e5c77f;background:linear-gradient(145deg,#fffdf7,#fff8e8);border-radius:14px;text-align:left;cursor:pointer;box-shadow:0 3px 9px #d6a84b18}.box:active{transform:scale(.97)}.box.paid{opacity:.65;border-color:#8fc2a4;background:#f0f8f2}.box b{display:block;color:var(--ink);font-size:14px}.box span{display:block;color:var(--green);font-weight:800;margin:5px 0}.box small{display:block;color:var(--muted)}
+.history{display:flex;justify-content:space-between;align-items:center;padding:11px 2px;border-bottom:1px solid #eee8dc}.history:last-child{border-bottom:0}.history b{color:var(--green)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;background:#fffffff2;backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;border-radius:18px 18px 0 0;box-shadow:0 -4px 18px #0000000c}nav button{flex:1;padding:14px;border:0;background:transparent;color:var(--muted);font-weight:800;cursor:pointer}nav button:first-child{color:var(--ink)}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:11px 17px;border-radius:99px;z-index:50;box-shadow:0 8px 22px #0004;font-size:13px;font-weight:700}
+h2{color:var(--ink);font-family:Georgia,serif;margin:12px 0}h3{font-family:Georgia,serif;color:var(--ink);margin-top:22px}
+#dayPreview{border-left:4px solid var(--gold);background:#fffaf0}#dayPreview b{color:var(--ink)}
+ 
+.dash-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:4px 0 16px}.dash-head h2{margin:2px 0 4px;font-size:25px}.eyebrow{font-size:10px;letter-spacing:1.5px;font-weight:900;color:var(--gold);margin-bottom:4px}.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{background:linear-gradient(145deg,#fff,#faf7f0);border:1px solid var(--line);border-radius:16px;padding:13px;box-shadow:0 4px 14px #0000000a}.metric span{font-size:18px}.metric small{display:block;color:var(--muted);font-size:11px;margin-top:7px}.metric b{display:block;color:var(--ink);font-size:20px;margin-top:3px}.metric.wide{grid-column:span 2}.metric.wide b{color:var(--green);font-size:22px}.progress-card{padding:15px}.progress{height:9px;background:#eee8db;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:99px}.section-bar{display:flex;align-items:center;justify-content:space-between;margin-top:20px}.section-bar h3{margin:0}.section-bar span{background:#e9eef7;color:var(--ink);font-weight:800;border-radius:99px;padding:4px 10px;font-size:12px}.setting-group{margin:18px 0}.setting-title{font-size:11px;font-weight:900;letter-spacing:1px;color:var(--muted);margin:0 0 7px 4px}
+</style></head><body><div class="app"><header><h1 id="biz">Tikanè Mwen</h1><div class="stats" id="stats"></div></header><main id="main"></main><nav><button id="navClients">👥 Kliyan</button><button id="navSettings">⚙️ Paramèt</button></nav></div><div id="modalRoot"></div>
+<script>
+const KEY='tikane_v9_data';
+let S=JSON.parse(localStorage.getItem(KEY)||'{"clients":[],"biz":"Tikanè Mwen"}');
+if(!S.clients)S.clients=[]; function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+const $=id=>document.getElementById(id), money=n=>'$HT '+Number(n||0).toLocaleString('fr-HT',{minimumFractionDigits:2,maximumFractionDigits:2});
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function toast(x){let d=document.createElement('div');d.className='toast';d.textContent=x;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+function expected(c){return c.plan==='normal'?c.amount*c.days:c.amount*c.days*(c.days+1)/2}
+function paid(c){return c.deposits.reduce((a,x)=>a+x.amount,0)} function complete(c){return c.deposits.length>=c.days}
+function updateStats(){let active=S.clients.filter(c=>!complete(c)).length;$('biz').textContent=S.biz;$('stats').innerHTML=`<div class="stat"><b>${S.clients.length}</b>Kliyan</div><div class="stat"><b>${active}</b>Aktif</div><div class="stat"><b>${money(S.clients.reduce((a,c)=>a+paid(c),0))}</b>Total depo</div>`}
+function clients(){
+  updateStats();
+  let totalDeposits=S.clients.reduce((a,c)=>a+paid(c),0);
+  let totalExpected=S.clients.reduce((a,c)=>a+expected(c),0);
+  let completed=S.clients.filter(c=>complete(c)).length;
+  let progress=totalExpected?Math.round(totalDeposits/totalExpected*100):0;
+  let m=$('main');
+  m.innerHTML=`
+  <div class="dash-head"><div><div class="eyebrow">DASHBOARD</div><h2>Bon retou 👋</h2><div class="muted">Men rezime aktivite tikanè yo.</div></div><button class="btn gold" id="newClient">＋ Kliyan</button></div>
+  <div class="metric-grid">
+    <div class="metric"><span>👥</span><small>Total kliyan</small><b>${S.clients.length}</b></div>
+    <div class="metric"><span>🟢</span><small>Kliyan aktif</small><b>${S.clients.filter(c=>!complete(c)).length}</b></div>
+    <div class="metric"><span>🏁</span><small>Plan fini</small><b>${completed}</b></div>
+    <div class="metric wide"><span>💰</span><small>Total depo kolekte</small><b>${money(totalDeposits)}</b></div>
+  </div>
+  <div class="card progress-card"><div class="history"><b>Pwogrè global</b><b>${progress}%</b></div><div class="progress"><i style="width:${Math.min(100,progress)}%"></i></div><div class="muted" style="margin-top:8px">${money(totalDeposits)} kolekte sou ${money(totalExpected)} atann.</div></div>
+  <div class="section-bar"><h3>👥 Kliyan yo</h3><span>${S.clients.length}</span></div>
+  <input id="search" placeholder="🔎 Chèche kliyan pa non oswa telefòn..."><div id="list"></div>`;
+  $('newClient').onclick=newClient;$('search').oninput=renderList;renderList()
+}
+function renderList(){let q=$('search').value.toLowerCase(), list=$('list');list.innerHTML='';S.clients.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q)).forEach(c=>{let d=document.createElement('div');d.className='card client';d.innerHTML=`<span class="badge">${complete(c)?'Fini':'Aktif'}</span><b>${c.name}</b><div class="muted">${c.plan==='normal'?'Plan Nòmal':'Plan Ekspo'} • ${c.deposits.length}/${c.days}</div><div class="muted">${money(paid(c))} sou ${money(expected(c))}</div>`;d.onclick=()=>detail(c.id);list.appendChild(d)});if(!list.innerHTML)list.innerHTML='<div class="card muted">Pa gen kliyan.</div>'}
+function modal(content){$('modalRoot').innerHTML=`<div class="modal"><div class="sheet">${content}</div></div>`}function closeModal(){$('modalRoot').innerHTML=''}
+function newClient(){modal(`<h2>Nouvo kliyan</h2><label>Non kliyan</label><input id="n"><label>Telefòn</label><input id="p"><label>Plan</label><select id="pl"><option value="normal">Plan Nòmal</option><option value="expo">Plan Ekspo (kazye)</option></select><label id="amtLabel">Montan chak jou ($HT)</label><input id="a" type="number" min="1"><label>Konbyen jou/kazye?</label><input id="d" type="number" min="1" value="110"><div class="row"><button class="btn outline" id="cancel">Anile</button><button class="btn primary" id="create">Kreye</button></div>`);$('cancel').onclick=closeModal;$('pl').onchange=()=>{$('amtLabel').textContent=$('pl').value==='normal'?'Montan chak jou ($HT)':'Plan pou miltipliye ($HT)'};$('create').onclick=()=>{let name=$('n').value.trim(),phone=$('p').value.trim(),amount=Number($('a').value),days=Number($('d').value);if(!name||!phone||amount<=0||days<=0)return toast('Ranpli tout chan yo.');S.clients.push({id:uid(),name,phone,plan:$('pl').value,amount,days,deposits:[]});save();closeModal();clients();toast('Kliyan an kreye!')}}
+function detail(id){let c=S.clients.find(x=>x.id===id);if(!c)return clients();updateStats();let action=c.plan==='normal'?`<button class="btn green full" id="collectNormal">➕ Ankese / Depo</button>`:'';let boxes='';if(c.plan==='expo'){for(let k=1;k<=c.days;k++){let x=c.deposits.find(d=>d.box===k);boxes+=`<button class="box ${x?'paid':''}" data-box="${k}" ${x?'disabled':''}><b>Kazye ${k}</b><span>${money(k*c.amount)}</span><small>${x?'Peye ✓':'Ankese'}</small></button>`}}
+$('main').innerHTML=`<button class="btn outline" id="back">← Retounen</button><h2>${c.name}</h2><div class="card"><div class="history"><span>Telefòn</span><b>${c.phone}</b></div><div class="history"><span>Plan</span><b>${c.plan==='normal'?'Nòmal':'Ekspo pa kazye'}</b></div><div class="history"><span>Pwogrè</span><b>${c.deposits.length}/${c.days}</b></div><div class="history"><span>Total depo</span><b>${money(paid(c))}</b></div><div class="history"><span>Total plan</span><b>${money(expected(c))}</b></div></div>${action}${c.plan==='expo'?`<h3>📦 Chwazi kazye pou ankese</h3><div class="muted">Ou ka chwazi nenpòt kazye.</div><div class="boxgrid">${boxes}</div>`:''}<h3>Istwa</h3><div class="card">${c.deposits.slice().reverse().map(d=>`<div class="history"><span>${c.plan==='expo'?'Kazye '+d.box:'Jou '+d.day}<br><small>${new Date(d.date).toLocaleDateString('fr-HT')}</small></span><b>${money(d.amount)}</b></div>`).join('')||'Pa gen depo.'}</div>`;$('back').onclick=clients;if(c.plan==='normal')$('collectNormal').onclick=()=>collectNormal(c);if(c.plan==='expo')document.querySelectorAll('[data-box]').forEach(b=>b.onclick=()=>collectBox(c,Number(b.dataset.box)))}
+function collectNormal(c){let day=c.deposits.length+1;if(day>c.days)return toast('Plan an fini.');modal(`<h2>➕ Ankese Plan Nòmal</h2><div class="card">Jou <b>${day}/${c.days}</b><br>Montan nòmal: <b>${money(c.amount)}</b><br><span class="muted">Montan an dwe peye yon kantite jou antye. Pa egzanp: 1 jou = ${money(c.amount)}, 2 jou = ${money(c.amount*2)}, 3 jou = ${money(c.amount*3)}. Nenpòt montan ki pa tonbe egzakteman sou youn oswa plizyè jou ap rejte otomatikman.</span></div><label>Montan resevwa ($HT)</label><input id="collectAmount" type="number" value="${c.amount}"><div id="dayPreview" class="card muted">Antre montan an pou wè konbyen jou li egal.</div><div class="row"><button class="btn outline" id="cn">Anile</button><button class="btn green" id="cc">✓ Konfime Ankesman</button></div>`);$('cn').onclick=closeModal;
+const amountInput=$('collectAmount');
+const preview=$('dayPreview');
+const daily=Number(c.amount);
+function showDays(){
+  const amount=Number(amountInput.value)||0;
+  if(amount<=0){preview.textContent='Antre montan an pou wè konbyen jou li egal.';return;}
+  const ratio=amount/daily;
+  const whole=Math.round(ratio);
+  if(Math.abs(ratio-whole)<1e-9 && whole>=1){
+    preview.innerHTML='<b>'+money(amount)+'</b> = <b>'+whole+' '+(whole===1?'jou':'jou')+'</b> ('+whole+' × '+money(daily)+')';
+  }else{
+    preview.innerHTML='<b>⚠️ Montan pa konplè.</b> Li pa egal ak yon kantite jou antye.';
+  }
+}
+amountInput.oninput=showDays;showDays();
+$('cc').onclick=()=>{
+  let amount=Number(amountInput.value);
+  if(amount<=0)return toast('Montan pa valab.');
+  const ratio=amount/daily;
+  const whole=Math.round(ratio);
+  if(Math.abs(ratio-whole)>1e-9 || whole<1){
+    return toast('Montan an rejte: li pa egal ak yon kantite jou antye.');
+  }
+  const remainingDays=c.days-c.deposits.length;
+  if(whole>remainingDays){
+    return toast('Montan an twòp pou jou ki rete yo. Gen sèlman '+remainingDays+' jou ki rete.');
+  }
+  const now=new Date().toISOString();
+  for(let i=0;i<whole;i++){
+    c.deposits.push({id:uid(),day:c.deposits.length+1,amount:daily,date:now});
+  }
+  save();closeModal();detail(c.id);
+  toast('Ankesman '+money(amount)+' egal ak '+whole+' jou. Anrejistre!');
+}}
+function collectBox(c,box){let amount=box*c.amount;modal(`<h2>📦 Ankese Kazye ${box}</h2><div class="card">Kazye <b>${box}</b><br>Plan: <b>${money(c.amount)}</b><br>Fòmil: ${box} × ${money(c.amount)}<h2>${money(amount)}</h2></div><div class="row"><button class="btn outline" id="cbn">Anile</button><button class="btn green" id="cbc">✓ Ankese Kazye sa a</button></div>`);$('cbn').onclick=closeModal;$('cbc').onclick=()=>{if(c.deposits.some(d=>d.box===box)){closeModal();return toast('Kazye sa deja peye.')}c.deposits.push({id:uid(),box,amount,date:new Date().toISOString()});save();closeModal();detail(c.id);toast('Kazye '+box+' an anrejistre!')}}
+function settings(){
+ updateStats();
+ let active=S.clients.filter(c=>!complete(c)).length, done=S.clients.length-active;
+ $('main').innerHTML=`
+ <div class="dash-head"><div><div class="eyebrow">KONFIGIRASYON</div><h2>⚙️ Paramèt</h2><div class="muted">Kontwole aplikasyon Tikanè Mwen an.</div></div></div>
+ <div class="setting-group"><div class="setting-title">🏢 ENFÒMASYON BIZNIS</div>
+ <div class="card"><label>Non biznis / aplikasyon</label><input id="bizInput" value="${S.biz}"><label>Deviz</label><select id="currency"><option value="HTG">$HT — Gourde Ayisyen</option></select><button class="btn primary full" id="saveBiz">💾 Anrejistre chanjman</button></div></div>
+ <div class="setting-group"><div class="setting-title">📊 REZIME DONE</div>
+ <div class="card">
+ <div class="history"><span>Total kliyan</span><b>${S.clients.length}</b></div>
+ <div class="history"><span>Kliyan aktif</span><b>${active}</b></div>
+ <div class="history"><span>Plan fini</span><b>${done}</b></div>
+ <div class="history"><span>Total depo</span><b>${money(S.clients.reduce((a,c)=>a+paid(c),0))}</b></div>
+ </div></div>
+ <div class="setting-group"><div class="setting-title">🛡️ JESYON DONE</div>
+ <div class="card"><div class="muted">Sove yon kopi done aplikasyon an sou aparèy ou.</div><div class="row" style="margin-top:12px"><button class="btn outline" id="exportData">📤 Ekspòte</button><button class="btn red" id="resetData">🗑️ Reyajiste</button></div></div></div>
+ <div class="setting-group"><div class="setting-title">ℹ️ SISTÈM</div><div class="card"><b>Tikanè Mwen</b><div class="muted">Vèsyon pwofesyonèl • $HT sèlman<br>Plan Nòmal ak validasyon jou antye<br>Plan Ekspo pa sistèm kazye</div></div></div>`;
+ $('saveBiz').onclick=()=>{S.biz=$('bizInput').value.trim()||'Tikanè Mwen';save();updateStats();toast('Paramèt anrejistre avèk siksè!')};
+ $('exportData').onclick=()=>{
+   const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+   const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Tikane_Mwen_Sauvegarde.json';a.click();URL.revokeObjectURL(u);toast('Done yo ekspòte!');
+ };
+ $('resetData').onclick=()=>{if(confirm('ATANSYON: Sa ap efase tout kliyan ak tout depo yo. Kontinye?')){S={clients:[],biz:S.biz||'Tikanè Mwen'};save();toast('Done yo reyajiste.');clients();}};
+}
+$('navClients').onclick=clients;$('navSettings').onclick=settings;clients();
+</script><script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+}
+</script>
+</body></html>
